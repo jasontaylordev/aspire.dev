@@ -447,3 +447,66 @@ test('topic sidebar custom controls persist collapse state and filter reset on r
   await expect.poll(() => hasTopicSidebarCollapsed(page)).toBe(false);
   await expect.poll(() => readTopicSidebarCollapsedPreference(page)).toBe('0');
 });
+
+test('persisted collapsed sidebar preference does not squish labels at sub-72rem viewports', async ({
+  page,
+}) => {
+  // Regression for the "collapsed icon-rail at narrow widths" bug, where a
+  // persisted collapsed preference combined with a viewport below 72rem
+  // shrank the sidebar to a 5rem rail without applying the rail-mode rules
+  // (which hide labels and centre icons). Result: every topic / sublist
+  // label wrapped one letter per line.
+  const viewport = page.viewportSize();
+  test.skip(
+    !viewport || viewport.width < 800 || viewport.width >= 1152,
+    'Bug only reproduces between the Starlight mobile breakpoint (50rem) and the desktop collapse breakpoint (72rem).'
+  );
+
+  // Pre-seed the persisted preferences so Head.astro's inline restore script
+  // applies `data-topic-sidebar-collapsed` / `data-sidebar-collapsed` to the
+  // documentElement before first paint — exactly the user-reported scenario
+  // of collapsing on a wide screen and then resizing/zooming down.
+  await page.addInitScript(() => {
+    localStorage.setItem('topic-sidebar-collapsed', '1');
+    localStorage.setItem('api-sidebar-collapsed', '1');
+  });
+
+  await page.goto('/app-host/certificate-configuration/');
+  await dismissCookieConsentIfVisible(page);
+
+  // Wait for the page and the topic sidebar element itself to render before
+  // we read computed styles or measure widths. At tablet widths we can't use
+  // `waitForTopicSidebarReady` — that helper asserts collapse/expand button
+  // visibility, but those controls live in rail mode (>= 72rem) which is
+  // exactly the breakpoint this bug sits outside of.
+  await expect(page.locator('main h1').first()).toBeVisible();
+  await expect(page.locator('.topics-sidebar[data-topic-nav]')).toBeAttached();
+  await expect
+    .poll(() =>
+      page.evaluate(() => document.documentElement.hasAttribute('data-topic-sidebar-ready'))
+    )
+    .toBe(true);
+
+  // Confirm the persisted preference round-tripped (so we know we're
+  // exercising the buggy code path, not a no-op).
+  await expect.poll(() => readTopicSidebarCollapsedPreference(page)).toBe('1');
+  await expect.poll(() => hasTopicSidebarCollapsed(page)).toBe(true);
+
+  // The squish bug was the result of `--sl-sidebar-width: 5rem` applying
+  // outside its intended `@media (min-width: 72rem)` scope. At narrow
+  // viewports the variable must keep its default (much wider) value.
+  const sidebarWidthVar = await page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue('--sl-sidebar-width').trim()
+  );
+  expect(sidebarWidthVar).not.toBe('5rem');
+
+  // And the actual rendered sidebar element width must clear the 80px
+  // icon-rail threshold — labels need horizontal room or they wrap badly.
+  const topicSidebarWidth = await page.evaluate(() => {
+    const el = document.querySelector('.topics-sidebar');
+    if (!el) return null;
+    return el.getBoundingClientRect().width;
+  });
+  expect(topicSidebarWidth).not.toBeNull();
+  expect(topicSidebarWidth ?? 0).toBeGreaterThan(120);
+});
