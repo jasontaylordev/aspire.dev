@@ -77,11 +77,6 @@ aspire certs trust
 
 By default, Aspire uses the ASP.NET Core developer certificate to secure communication with its internal Developer Control Plane (DCP) server. This replaces the ephemeral localhost certificate that DCP would otherwise generate itself, and avoids certificate trust errors caused by that certificate not being in the system trust store.
 
-The behavior differs by platform:
-
-- **Windows** — Aspire passes the developer certificate thumbprint to DCP via `--tls-cert-thumbprint`.
-- **macOS and Linux** — Aspire exports the certificate and private key to cached files (stored under your user profile with user-only permissions) and passes `--tls-cert-file`, `--tls-key-file`, and `--tls-cert-thumbprint` to DCP.
-
 If no trusted developer certificate is found, Aspire automatically falls back to DCP's ephemeral certificate.
 
 To opt out and use DCP's default ephemeral certificate instead, set `ASPIRE_DCP_USE_DEVELOPER_CERTIFICATE` to `false` in your AppHost's `launchSettings.json` or as an environment variable:
