@@ -75,15 +75,15 @@ The `aspire.config.json` file is the central configuration for your AppHost. It 
 | `packages` | Hosting integration packages and their versions. Added automatically by `aspire add`. |
 | `profiles` | Launch profiles with dashboard URLs and environment variables |
 
-### Adding integrations
+### Add and restore integrations
 
-When you run `aspire add`, the CLI adds the package to the `packages` section and regenerates the TypeScript SDK:
+Use `aspire add` from the AppHost root to add hosting integrations. The CLI adds the package to the `packages` section, restores AppHost dependencies, and regenerates the TypeScript SDK in `.aspire/modules/`:
 
 ```bash title="Add an integration"
 aspire add redis
 ```
 
-This updates `aspire.config.json`:
+This updates `aspire.config.json` so the package is restored the next time the AppHost runs:
 
 ```json title="aspire.config.json" ins={4}
 {
@@ -92,6 +92,12 @@ This updates `aspire.config.json`:
     "Aspire.Hosting.Redis": "13.3.0"
   }
 }
+```
+
+Run `aspire restore` when you want to regenerate `.aspire/modules/` without starting the AppHost, such as after switching branches, updating package versions, or preparing a CI job:
+
+```bash title="Restore a TypeScript AppHost"
+aspire restore
 ```
 
 ### Project references for local development
