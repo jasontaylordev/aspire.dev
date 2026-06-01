@@ -193,9 +193,10 @@ function compileBlock(source: string, lang: string): BlockDiagnostic[] {
       code: e.code,
       // `@ec-ts/twoslash` puts the rendered diagnostic on `.text` (the
       // older `@typescript/twoslash` shape used `.renderedMessage`).
-      message: (e as { text?: string; renderedMessage?: string }).text
-        ?? (e as { renderedMessage?: string }).renderedMessage
-        ?? `(unknown ts(${e.code}) diagnostic)`,
+      message:
+        (e as { text?: string; renderedMessage?: string }).text ??
+        (e as { renderedMessage?: string }).renderedMessage ??
+        `(unknown ts(${e.code}) diagnostic)`,
       // Will be remapped to mdx coordinates by the caller.
       mdxLine: 0,
       column: ((e.character as number | undefined) ?? 0) + 1,
@@ -224,9 +225,7 @@ export function runAudit(): AuditReport {
 
   const { exists } = readAspireTypes();
   if (!exists) {
-    throw new Error(
-      'aspire.d.ts is missing — run `pnpm twoslash-types` before auditing.'
-    );
+    throw new Error('aspire.d.ts is missing — run `pnpm twoslash-types` before auditing.');
   }
 
   const filesAbs = walkMdx(DOCS_ROOT);
@@ -262,9 +261,7 @@ export function runAudit(): AuditReport {
     }
   }
 
-  const blocksWithErrors = results.filter(
-    (r) => r.diagnostics.length > 0 || r.crashed
-  ).length;
+  const blocksWithErrors = results.filter((r) => r.diagnostics.length > 0 || r.crashed).length;
   const totalDiagnostics = results.reduce((sum, r) => sum + r.diagnostics.length, 0);
 
   return {

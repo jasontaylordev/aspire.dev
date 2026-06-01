@@ -1,5 +1,7 @@
 ---
 title: Aspire CLI overview
+description: Overview of the Aspire CLI, the cross-platform terminal tool for creating, running, and deploying Aspire AppHost projects from your shell.
+seoTitle: 'Aspire CLI overview: commands, options, and workflows'
 ---
 
 import { Aside, CardGrid, LinkCard } from '@astrojs/starlight/components';
@@ -202,6 +204,10 @@ Use `aspire describe`, `aspire logs`, and `aspire export` to inspect resources, 
   `aspire export`](../commands/aspire-export/), and [Command reference: `aspire
   otel`](../commands/aspire-otel/)
 </LearnMore>
+
+Use the `--search` option with `aspire logs` and `aspire otel` commands to filter output by matching text against log content and trace/span fields. Search supports free-text fragments, structured `field:value` qualifiers, negation, and comparison operators.
+
+<LearnMore>[Search and filter](../search-filter/)</LearnMore>
 
 ## Diagnose and prepare the environment
 

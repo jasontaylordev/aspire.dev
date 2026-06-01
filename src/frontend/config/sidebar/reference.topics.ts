@@ -214,6 +214,10 @@ export const referenceTopics: StarlightSidebarTopicsUserConfig[number] = {
           slug: 'reference/cli/install-script',
         },
         {
+          label: 'Search and filter',
+          slug: 'reference/cli/search-filter',
+        },
+        {
           label: 'Configuration',
           translations: {
             da: 'Konfiguration',
@@ -434,6 +438,7 @@ export const referenceTopics: StarlightSidebarTopicsUserConfig[number] = {
               slug: 'reference/cli/commands/aspire-export',
             },
             { label: 'aspire init', slug: 'reference/cli/commands/aspire-init' },
+            { label: 'aspire ls', slug: 'reference/cli/commands/aspire-ls' },
             {
               label: 'aspire logs',
               slug: 'reference/cli/commands/aspire-logs',
@@ -571,10 +576,6 @@ export const referenceTopics: StarlightSidebarTopicsUserConfig[number] = {
             { label: 'ASPIRE003', link: '/diagnostics/aspire003' },
             { label: 'ASPIRE004', link: '/diagnostics/aspire004' },
             {
-              label: 'ASPIREATS001',
-              link: '/diagnostics/aspireats001',
-            },
-            {
               label: 'ASPIREEXPORT005',
               link: '/diagnostics/aspireexport005',
             },
@@ -601,6 +602,10 @@ export const referenceTopics: StarlightSidebarTopicsUserConfig[number] = {
             {
               label: 'ASPIREEXPORT013',
               link: '/diagnostics/aspireexport013',
+            },
+            {
+              label: 'ASPIREEXPORT016',
+              link: '/diagnostics/aspireexport016',
             },
             {
               label: 'ASPIRECERTIFICATES001',
@@ -667,6 +672,10 @@ export const referenceTopics: StarlightSidebarTopicsUserConfig[number] = {
               link: '/diagnostics/aspirepostgres001',
             },
             {
+              label: 'ASPIREPROCESSCOMMAND001',
+              link: '/diagnostics/aspireprocesscommand001',
+            },
+            {
               label: 'ASPIREUSERSECRETS001',
               link: '/diagnostics/aspireusersecrets001',
             },
@@ -707,6 +716,10 @@ export const referenceTopics: StarlightSidebarTopicsUserConfig[number] = {
             {
               label: 'ASPIREEXPORT004',
               link: '/diagnostics/aspireexport004',
+            },
+            {
+              label: 'ASPIREEXPORT015',
+              link: '/diagnostics/aspireexport015',
             },
             {
               label: 'ASPIREHOSTINGPYTHON001',

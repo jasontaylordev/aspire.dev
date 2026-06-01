@@ -1,6 +1,6 @@
 ---
 title: What are Aspire integrations?
-description: Aspire integrations overview page, showcasing how Aspire works with various tools and platforms.
+description: Aspire integrations overview page, showcasing how Aspire works with various tools and platforms in your Aspire AppHost.
 tableOfContents: true
 lastUpdated: false
 editUrl: false
@@ -89,8 +89,8 @@ architecture-beta
   redis:R --> T:app
 ```
 
-```typescript title="TypeScript — apphost.ts" twoslash
-import { createBuilder } from './.modules/aspire.js';
+```typescript title="TypeScript — apphost.mts" twoslash
+import { createBuilder } from './.aspire/modules/aspire.mjs';
 
 const builder = await createBuilder();
 

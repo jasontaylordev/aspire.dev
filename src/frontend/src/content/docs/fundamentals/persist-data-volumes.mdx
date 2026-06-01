@@ -1,6 +1,6 @@
 ---
-title: Persist Aspire project data using volumes or bind mounts
-description: Learn about Aspire configurations that persist data across restarts by using volumes and bind mounts in containers.
+title: Persist Aspire data with volumes and binds
+description: Configure Aspire resources to persist data across restarts using container volumes and bind mounts for databases, caches, message brokers, and stateful integrations.
 ---
 
 import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
@@ -59,8 +59,8 @@ builder.Build().Run();
 </TabItem>
 <TabItem id="typescript" label="TypeScript">
 
-```typescript title="TypeScript — apphost.ts" twoslash
-import { createBuilder } from './.modules/aspire.js';
+```typescript title="TypeScript — apphost.mts" twoslash
+import { createBuilder } from './.aspire/modules/aspire.mjs';
 
 const builder = await createBuilder();
 
@@ -88,7 +88,7 @@ var sql = builder.AddSqlServer("sql")
 </TabItem>
 <TabItem id="typescript" label="TypeScript">
 
-```typescript title="TypeScript — apphost.ts"
+```typescript title="TypeScript — apphost.mts"
 const sql = await builder.addSqlServer("sql");
 await sql.withVolume("/var/opt/mssql");
 const sqldb = await sql.addDatabase("sqldb");
@@ -113,7 +113,7 @@ var sql = builder.AddSqlServer("sql")
 </TabItem>
 <TabItem id="typescript" label="TypeScript">
 
-```typescript title="TypeScript — apphost.ts"
+```typescript title="TypeScript — apphost.mts"
 const sql = await builder.addSqlServer("sql");
 await sql.withDataVolume();
 const sqldb = await sql.addDatabase("sqldb");
@@ -148,7 +148,7 @@ var sql = builder.AddSqlServer("sql")
 </TabItem>
 <TabItem id="typescript" label="TypeScript">
 
-```typescript title="TypeScript — apphost.ts"
+```typescript title="TypeScript — apphost.mts"
 const sql = await builder.addSqlServer("sql");
 await sql.withBindMount("C:\\SqlServer\\Data", "/var/opt/mssql");
 const sqldb = await sql.addDatabase("sqldb");
@@ -176,7 +176,7 @@ var sql = builder.AddSqlServer("sql")
 </TabItem>
 <TabItem id="typescript" label="TypeScript">
 
-```typescript title="TypeScript — apphost.ts"
+```typescript title="TypeScript — apphost.mts"
 const sql = await builder.addSqlServer("sql");
 await sql.withDataBindMount("C:\\SqlServer\\Data");
 const sqldb = await sql.addDatabase("sqldb");
@@ -201,7 +201,7 @@ var sql = builder.AddSqlServer("sql")
 </TabItem>
 <TabItem id="typescript" label="TypeScript">
 
-```typescript title="TypeScript — apphost.ts"
+```typescript title="TypeScript — apphost.mts"
 const sql = await builder.addSqlServer("sql");
 await sql.withDataVolume();
 const sqldb = await sql.addDatabase("sqldb");
@@ -253,7 +253,7 @@ var sql = builder.AddSqlServer("sql", password: sqlPassword)
 </TabItem>
 <TabItem id="typescript" label="TypeScript">
 
-```typescript title="TypeScript — apphost.ts"
+```typescript title="TypeScript — apphost.mts"
 const sqlPassword = await builder.addParameter("sql-password", { secret: true });
 
 const sql = await builder.addSqlServer("sql", { password: sqlPassword });
