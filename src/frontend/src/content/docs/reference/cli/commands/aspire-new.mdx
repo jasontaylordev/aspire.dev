@@ -112,7 +112,7 @@ The following options are available:
 
 - **`--channel`**
 
-  Channel to use for templates (`stable`, `staging`, `daily`).
+  Channel to use for templates (`stable`, `staging`, `daily`). If you don't specify `--version`, `aspire new` selects a template package from the channel and prefers the version that matches the currently installed CLI/SDK. For explicit pre-release channels, such as `staging` and `daily`, it pins templates to the installed CLI/SDK version when the feed would otherwise select a newer pre-release package. For example, a `13.4` CLI using `--channel daily` won't pull `13.5` preview templates even if the daily feed contains them. If you specify `--version`, that template version is used with the selected channel.
 
   When `--channel` is not specified, `aspire new` automatically uses the running CLI's _identity channel_ — the channel that matches the CLI build you have installed (for example, `daily` for a nightly build, `staging` for a release-candidate build, or a `pr-<N>` channel for a pull-request build). This ensures that the correct package feed is used to resolve `Aspire.ProjectTemplates` without requiring an explicit flag.
 
