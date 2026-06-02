@@ -351,15 +351,14 @@ await builder.build().run();
 
 ## Connect to an existing RabbitMQ instance
 
-In C#, call `AsExisting` instead of `AddRabbitMQ` to reference an externally managed RabbitMQ instance:
+To reference an externally managed RabbitMQ instance instead of running one as a container, use `AddConnectionString`:
 
 <Tabs syncKey="aspire-lang">
 <TabItem id="csharp" label="C#">
 ```csharp title="C# — AppHost.cs"
 var builder = DistributedApplication.CreateBuilder(args);
 
-var rabbitmq = builder.AddRabbitMQ("messaging")
-    .AsExisting(connectionStringParameter: builder.AddParameter("messaging-cs", secret: true));
+var rabbitmq = builder.AddConnectionString("messaging");
 
 var exampleProject = builder.AddProject<Projects.ExampleProject>("apiservice")
     .WithReference(rabbitmq);
@@ -368,13 +367,27 @@ var exampleProject = builder.AddProject<Projects.ExampleProject>("apiservice")
 ```
 </TabItem>
 <TabItem id="typescript" label="TypeScript">
-The TypeScript AppHost doesn't currently expose an `asExisting(...)` API for RabbitMQ. To connect to an existing RabbitMQ instance from a TypeScript AppHost, use [`builder.addConnectionString(...)`](/get-started/app-host/) with a parameter and reference that connection string from your consuming apps instead.
+```typescript title="TypeScript — apphost.ts"
+import { createBuilder } from './.modules/aspire.js';
+
+const builder = await createBuilder();
+
+const rabbitmq = await builder.addConnectionString("messaging");
+
+await builder.addNodeApp("my-app", "./app", "index.js")
+    .withReference(rabbitmq);
+
+// After adding all resources, run the app...
+await builder.build().run();
+```
 </TabItem>
 </Tabs>
 
+With `AddConnectionString` and `addConnectionString`, Aspire resolves `messaging` from `ConnectionStrings:messaging` (or environment variable `ConnectionStrings__messaging`) in the AppHost configuration. Consuming apps receive that value as a single connection string, not deconstructed RabbitMQ resource-specific connection-property variables such as `MESSAGING_URI`, `MESSAGING_HOST`, or `MESSAGING_PORT`.
+
 ## Connection properties
 
-For the full reference of RabbitMQ connection properties — and how consuming apps in C#, TypeScript, Python, and Go read them — see [Connect to RabbitMQ](../rabbitmq-connect/).
+For the full reference of RabbitMQ resource connection properties — and how consuming apps in C#, TypeScript, Python, and Go read them — see [Connect to RabbitMQ](../rabbitmq-connect/).
 
 <span id="rabbitmq-4-3-queue-declaration-requirements" aria-hidden="true"></span>
 
